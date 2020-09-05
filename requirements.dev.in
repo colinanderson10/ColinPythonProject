@@ -6,3 +6,5 @@ jupyterlab
 pip-tools
 pre-commit
 nose
+plotly
+scikit-learn
