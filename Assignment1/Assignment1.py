@@ -1,7 +1,9 @@
 import sys
 
+import numpy
 import pandas
 import plotly.express as px
+import plotly.io as pio
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline
@@ -23,9 +25,62 @@ def main():
 
     # Use pandas to return descriptive stats
 
-    print("\nDescriptive Statistics through Pandas\n", iris.describe())
+    print("\nDescriptive Statistics through Pandas\n\n", iris.describe())
+
+    # Use numpy to return descriptive stats
+
+    print(
+        "\nDescriptive Statistics through Numpy:\n\nVariable Means\n"
+        + str(numpy.mean(iris))
+    )
+
+    print("\nVariable Minimums\n" + str(numpy.min(iris)))
+
+    print("\nVariable Maximums\n" + str(numpy.max(iris)))
+
+    irisSepalLength = iris.drop(
+        columns=["Sepal_Width", "Petal_Length", "Petal_Width", "Type"]
+    )
+
+    irisSepalWidth = iris.drop(
+        columns=["Sepal_Length", "Petal_Length", "Petal_Width", "Type"]
+    )
+
+    irisPetalLength = iris.drop(
+        columns=["Sepal_Length", "Sepal_Width", "Petal_Width", "Type"]
+    )
+
+    irisPetalWidth = iris.drop(
+        columns=["Sepal_Length", "Sepal_Width", "Petal_Length", "Type"]
+    )
+
+    print(
+        "\nVariable 25% Quartiles\n"
+        + "Sepal Length: "
+        + str(numpy.quantile(irisSepalLength, 0.25, axis=0))
+        + "\nSepal Width: "
+        + str(numpy.quantile(irisSepalWidth, 0.25, axis=0))
+        + "\nPetal Length: "
+        + str(numpy.quantile(irisPetalLength, 0.25, axis=0))
+        + "\nPetal Width: "
+        + str(numpy.quantile(irisPetalWidth, 0.25, axis=0))
+    )
+
+    print(
+        "\nVariable 75% Quartiles\n"
+        + "Sepal Length: "
+        + str(numpy.quantile(irisSepalLength, 0.75, axis=0))
+        + "\nSepal Width: "
+        + str(numpy.quantile(irisSepalWidth, 0.75, axis=0))
+        + "\nPetal Length: "
+        + str(numpy.quantile(irisPetalLength, 0.75, axis=0))
+        + "\nPetal Width: "
+        + str(numpy.quantile(irisPetalWidth, 0.75, axis=0))
+    )
 
     # Make Plots
+
+    pio.renderers.default = "browser"
 
     # Scatter Plot
 
@@ -70,41 +125,29 @@ def main():
 
     y = iris["Type"].values
 
-    normalizer = Normalizer()
-
-    normalizer.fit(X_orig)
-
-    X = normalizer.transform(X_orig)
-
-    random_forest = RandomForestClassifier(random_state=2222)
-    random_forest.fit(X, y)
-
-    neigh = KNeighborsClassifier(n_neighbors=4)
-    neigh.fit(X, y)
-
     print("\nModel via Random Forest Pipeline Predictions")
-    pipeline = Pipeline(
+    pipeline1 = Pipeline(
         [
             ("Normalizer", Normalizer()),
-            ("RandomForest", random_forest),
+            ("RandomForest", RandomForestClassifier(random_state=2222)),
         ]
     )
-    pipeline.fit(X_orig, y)
+    pipeline1.fit(X_orig, y)
 
-    print("\nRandom Forest Probability:\n", pipeline.predict_proba(X))
-    print("\nRandom Forest Score:", pipeline.score(X, y))
+    print("\nRandom Forest Probability:\n", pipeline1.predict_proba(X_orig))
+    print("\nRandom Forest Score:", pipeline1.score(X_orig, y))
 
     print("\nModel via Nearest Neighbor Pipeline Predictions")
-    pipeline = Pipeline(
+    pipeline2 = Pipeline(
         [
             ("Normalizer", Normalizer()),
-            ("Nearest Neighbor", neigh),
+            ("Nearest Neighbor", KNeighborsClassifier(n_neighbors=4)),
         ]
     )
-    pipeline.fit(X_orig, y)
+    pipeline2.fit(X_orig, y)
 
-    print("\nNearest Neighbor Probability:\n", pipeline.predict_proba(X))
-    print("\nNearest Neighbor Score:", pipeline.score(X, y))
+    print("\nNearest Neighbor Probability:\n", pipeline2.predict_proba(X_orig))
+    print("\nNearest Neighbor Score:", pipeline2.score(X_orig, y))
     return
 
 
