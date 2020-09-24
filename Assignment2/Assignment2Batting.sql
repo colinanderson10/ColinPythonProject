@@ -22,7 +22,7 @@ CREATE TABLE totalbattingaverage
 CREATE Table annualbattingaverage
 	Select bc.batter, year(g.local_date) as gameyear, sum(bc.Hit) AS annualhits, sum(bc.atBat) AS annualatbats, sum(bc.Hit)/sum(bc.atBat) AS annualbattingaverage
 	FROM batter_counts bc
-	JOIN game_temp g ON g.game_id=bc.game_id
+	JOIN game g ON g.game_id=bc.game_id
 	WHERE batter=112736
 	GROUP BY batter, gameyear;
 
@@ -31,7 +31,7 @@ CREATE Table annualbattingaverage
 CREATE Table rollingbainter
 	SELECT bc.game_id, bc.batter, g.local_date as gamedate, DATE_ADD(g.local_date, INTERVAL -100 DAY) as firstdate, DATE_ADD(g.local_date, INTERVAL -1 DAY) as yesterday, bc.Hit as Hit, bc.atBat as atBat
 	FROM batter_counts bc
-	JOIN game_temp g ON g.game_id=bc.game_id
+	JOIN game g ON g.game_id=bc.game_id
 	WHERE batter=112736 and atBat>0;
 
 #The rolling batting average over the previous 100 days for each game for 1 player
@@ -56,7 +56,7 @@ CREATE TABLE allbattertotalbattingaverage
 CREATE Table allbatterannualbattingaverage
 	Select bc.batter, year(g.local_date) as gameyear, sum(bc.Hit) AS annualhits, sum(bc.atBat) AS annualatbats, sum(bc.Hit)/sum(bc.atBat) AS annualbattingaverage
 	FROM batter_counts bc
-	JOIN game_temp g ON g.game_id=bc.game_id
+	JOIN game g ON g.game_id=bc.game_id
 	WHERE atBat>0
 	GROUP BY batter, gameyear;
 
@@ -65,7 +65,7 @@ CREATE Table allbatterannualbattingaverage
 CREATE Table allbatterrollingbainter
 	SELECT bc.game_id, bc.batter, g.local_date as gamedate, DATE_ADD(g.local_date, INTERVAL -100 DAY) as firstdate, DATE_ADD(g.local_date, INTERVAL -1 DAY) as yesterday, bc.Hit as Hit, bc.atBat as atBat
 	FROM batter_counts bc
-	JOIN game_temp g ON g.game_id=bc.game_id
+	JOIN game g ON g.game_id=bc.game_id
 	WHERE atBat>0;
 
 #This table has the rolling batting average for all players
