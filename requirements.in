@@ -6,3 +6,4 @@ sqlalchemy
 mysqlclient
 pyspark
 pyspark-stubs
+statsmodels
