@@ -18,6 +18,24 @@ def main():
     pandas.set_option("display.max_columns", None)
 
     # Input file location of csv in LOCATION and COLUMN NAMES under COLUMN_NAMES
+
+    data = pandas.read_csv("LOCATION", header=None)
+    column_names = [
+        "Column1",
+        "Column2",
+    ]
+    data.columns = column_names
+
+    for y in column_names:
+        e = data[y].to_frame()
+        if e.dtypes[0] == object:
+            data = pandas.get_dummies(data, dtype=int)
+
+    columns = data.columns.values.tolist()
+    print("Column names:\n", columns)
+
+    """
+    # Input file location of csv in LOCATION and COLUMN NAMES under COLUMN_NAMES
     data = pandas.read_csv("iris.data", header=None)
     data_column_names = [
         "sepal_length",
@@ -27,11 +45,19 @@ def main():
         "binomial",
         "binomial2",
         "bool",
+        "class"
     ]
     data.columns = data_column_names
 
+    for y in data_column_names:
+        e = data[y].to_frame()
+        if e.dtypes[0] == object:
+            data=pandas.get_dummies(data, dtype=int)
+
     columns = data.columns.values.tolist()
+
     print("Column names:\n", columns)
+    """
 
     def response_entry():
         response = input("\nEnter response variable:\n")
@@ -85,11 +111,12 @@ def main():
     for predictor in predictor_columns:
 
         c = data[predictor].to_frame()
-
-        if c.dtypes[0] == str or c.dtypes[0] == int:
-            Categorical_Predictors[predictor] = data[predictor]
-        else:
+        print(c)
+        print(c.dtypes[0])
+        if c.dtypes[0] == float:
             Continuous_Predictors[predictor] = data[predictor]
+        else:
+            Categorical_Predictors[predictor] = data[predictor]
 
     print(Continuous_Predictors)
 
@@ -182,7 +209,11 @@ def main():
     Cont_Cont_Correlation_Table["Correlation_Metric"] = corrlist
     Cont_Cont_Correlation_Table["Relationship_Plot"] = plotlist
 
-    Cont_Cont_Correlation_Table.to_html(
+    Cont_Cont_Correlation_Table_Final = Cont_Cont_Correlation_Table.sort_values(
+        ["Correlation_Metric"], ascending=False
+    )
+
+    Cont_Cont_Correlation_Table_Final.to_html(
         "Continuous_Continuous_Correlation_Table.html", escape=False
     )
 
@@ -329,7 +360,11 @@ def main():
         "DifferenceWithMeanOfResponseValuesPlot"
     ] = DifferenceWithMeanOfResponseValuesPlot
 
-    Cont_Cont_Brute_Force_Table.to_html(
+    Cont_Cont_Brute_Force_Table_Final = Cont_Cont_Brute_Force_Table.sort_values(
+        ["DifferenceWithMeanOfResponseWeighted"], ascending=False
+    )
+
+    Cont_Cont_Brute_Force_Table_Final.to_html(
         f"Continuous_Continuous_Mean_Response_Values.html", escape=False
     )
 
@@ -387,6 +422,11 @@ def main():
         for r in catvalues:
             hist_data.append(data[predictor1].groupby(data[predictor2]).apply(list)[r])
             group_labels.append("Response = " + str(r))
+
+        print(predictor1)
+        print(predictor2)
+        print(hist_data)
+        print(group_labels)
 
         DistributionPlot = plotly.tools.FigureFactory.create_distplot(
             hist_data, group_labels, bin_size=binsize
@@ -448,7 +488,11 @@ def main():
     Cont_Cat_Correlation_Table["Distribution_Plot"] = plotlist1
     Cont_Cat_Correlation_Table["Violin_Plot"] = plotlist2
 
-    Cont_Cat_Pairs.to_html(
+    Cont_Cat_Correlation_Table_Final = Cont_Cat_Correlation_Table.sort_values(
+        ["Correlation_Metric"], ascending=False
+    )
+
+    Cont_Cat_Correlation_Table_Final.to_html(
         "Continuous_Categorical_Correlation_Table.html", escape=False
     )
 
@@ -599,7 +643,11 @@ def main():
         "DifferenceWithMeanOfResponseValuesPlot"
     ] = DifferenceWithMeanOfResponseValuesPlot
 
-    Cont_Cat_Brute_Force_Table.to_html(
+    Cont_Cat_Brute_Force_Table_Final = Cont_Cat_Brute_Force_Table.sort_values(
+        ["DifferenceWithMeanOfResponseWeighted"], ascending=False
+    )
+
+    Cont_Cat_Brute_Force_Table_Final.to_html(
         f"Continuous_Categorical_Mean_Response_Values.html", escape=False
     )
 
@@ -731,7 +779,11 @@ def main():
     Cat_Cat_Correlation_Table["Correlation_Metric"] = corrlist
     Cat_Cat_Correlation_Table["Relationship_Plot"] = plotlist
 
-    Cat_Cat_Correlation_Table.to_html(
+    Cat_Cat_Correlation_Table_Final = Cat_Cat_Correlation_Table.sort_values(
+        ["Correlation_Metric"], ascending=False
+    )
+
+    Cat_Cat_Correlation_Table_Final.to_html(
         "Categorical_Categorical_Correlation_Table.html", escape=False
     )
 
@@ -884,7 +936,11 @@ def main():
         "DifferenceWithMeanOfResponseValuesPlot"
     ] = DifferenceWithMeanOfResponseValuesPlot
 
-    Cat_Cat_Brute_Force_Table.to_html(
+    Cat_Cat_Brute_Force_Table_Final = Cat_Cat_Brute_Force_Table.sort_values(
+        ["DifferenceWithMeanOfResponseWeighted"], ascending=False
+    )
+
+    Cat_Cat_Brute_Force_Table_Final.to_html(
         f"Categorical_Categorical_Mean_Response_Values.html", escape=False
     )
 
