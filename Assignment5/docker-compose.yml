@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.3"
 
 services:
   code:
@@ -8,11 +8,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    environment:
-      MYSQL_HOST: mysql
-      MYSQL_USER: root
-      MYSQL_PASSWORD: secret
-      MYSQL_DB: baseball
+    volumes:
+      - ./results:/results
     networks:
       - hwnetwork
 
@@ -24,7 +21,7 @@ services:
     expose:
       - 3307
     volumes:
-      - ./:/data
+      - ./db:/var/lib/mysql
     environment:
       MYSQL_HOST: mysql
       MYSQL_USER: root
