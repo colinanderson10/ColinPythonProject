@@ -15,10 +15,6 @@ CREATE TABLE IF NOT EXISTS allbatterrollingbattingaverage
 	GROUP BY batter, gamedate, firstdate, gamehit, gameatbat
 	ORDER BY batter, gamedate, firstdate;
 
-SELECT *
-FROM allbatterrollingbattingaverage
-INTO OUTFILE '/data/all_players_rolling_avg.csv';
-
 CREATE TABLE IF NOT EXISTS gameplayers
     SELECT l.game_id, l.player_id, l.batting_order, bc.batter, g.local_date as gamedate, DATE_ADD(g.local_date, INTERVAL -100 DAY) as firstdate, DATE_ADD(g.local_date, INTERVAL -1 DAY) as yesterday, bc.Hit as Hit, bc.atBat as atBat
     FROM lineup l
@@ -33,9 +29,3 @@ CREATE TABLE IF NOT EXISTS gamerollingbattingaverage
 	WHERE rbi1.gamedate BETWEEN gp.firstdate AND gp.yesterday
 	GROUP BY batter, gamedate, firstdate, gamehit, gameatbat
 	ORDER BY batter, gamedate, firstdate;
-
-SELECT *
-FROM gamerollingbattingaverage
-INTO OUTFILE '/data/game_players_rolling_avg.csv';
-
-

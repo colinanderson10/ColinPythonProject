@@ -18,7 +18,7 @@ def main():
     pandas.set_option("display.max_columns", None)
 
     # Input file location of csv in LOCATION and COLUMN NAMES under COLUMN_NAMES
-
+    """
     data = pandas.read_csv("LOCATION", header=None)
     column_names = [
         "Column1",
@@ -45,19 +45,18 @@ def main():
         "binomial",
         "binomial2",
         "bool",
-        "class"
+        "class",
     ]
     data.columns = data_column_names
 
     for y in data_column_names:
         e = data[y].to_frame()
         if e.dtypes[0] == object:
-            data=pandas.get_dummies(data, dtype=int)
+            data = pandas.get_dummies(data, dtype=int)
 
     columns = data.columns.values.tolist()
 
     print("Column names:\n", columns)
-    """
 
     def response_entry():
         response = input("\nEnter response variable:\n")
